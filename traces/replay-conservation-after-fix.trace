@@ -1,0 +1,21 @@
+# captured from AbstractLoanRepaymentScheduleTransactionProcessor.reprocessLoanTransactions
+period=0 amount=100 is_chargeback=true overpaid_before=0 overpaid_after=0 principal_created=100.00 credit_consumed=0
+period=1 amount=100 is_chargeback=true overpaid_before=50 overpaid_after=0.00 principal_created=50.00 credit_consumed=50.00
+period=2 amount=100 is_chargeback=true overpaid_before=100 overpaid_after=0.00 principal_created=0.00 credit_consumed=100.00
+period=3 amount=100 is_chargeback=true overpaid_before=200 overpaid_after=100.00 principal_created=0.00 credit_consumed=100.00
+period=4 amount=250 is_chargeback=true overpaid_before=0 overpaid_after=0 principal_created=250.00 credit_consumed=0
+period=5 amount=250 is_chargeback=true overpaid_before=125 overpaid_after=0.00 principal_created=125.00 credit_consumed=125.00
+period=6 amount=250 is_chargeback=true overpaid_before=250 overpaid_after=0.00 principal_created=0.00 credit_consumed=250.00
+period=7 amount=250 is_chargeback=true overpaid_before=500 overpaid_after=250.00 principal_created=0.00 credit_consumed=250.00
+period=8 amount=300 is_chargeback=true overpaid_before=0 overpaid_after=0 principal_created=300.00 credit_consumed=0
+period=9 amount=300 is_chargeback=true overpaid_before=150 overpaid_after=0.00 principal_created=150.00 credit_consumed=150.00
+period=10 amount=300 is_chargeback=true overpaid_before=300 overpaid_after=0.00 principal_created=0.00 credit_consumed=300.00
+period=11 amount=300 is_chargeback=true overpaid_before=600 overpaid_after=300.00 principal_created=0.00 credit_consumed=300.00
+period=12 amount=500 is_chargeback=true overpaid_before=0 overpaid_after=0 principal_created=500.00 credit_consumed=0
+period=13 amount=500 is_chargeback=true overpaid_before=250 overpaid_after=0.00 principal_created=250.00 credit_consumed=250.00
+period=14 amount=500 is_chargeback=true overpaid_before=500 overpaid_after=0.00 principal_created=0.00 credit_consumed=500.00
+period=15 amount=500 is_chargeback=true overpaid_before=1000 overpaid_after=500.00 principal_created=0.00 credit_consumed=500.00
+period=16 amount=750 is_chargeback=true overpaid_before=0 overpaid_after=0 principal_created=750.00 credit_consumed=0
+period=17 amount=750 is_chargeback=true overpaid_before=375 overpaid_after=0.00 principal_created=375.00 credit_consumed=375.00
+period=18 amount=750 is_chargeback=true overpaid_before=750 overpaid_after=0.00 principal_created=0.00 credit_consumed=750.00
+period=19 amount=750 is_chargeback=true overpaid_before=1500 overpaid_after=750.00 principal_created=0.00 credit_consumed=750.00

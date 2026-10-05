@@ -169,7 +169,11 @@ public abstract class AbstractLoanRepaymentScheduleTransactionProcessor implemen
             }
         }
 
-        MoneyHolder overpaymentHolder = new MoneyHolder(Money.zero(currency));
+        // Seed from the loan's true overpaid balance, as every live path does (see specs/replay-conservation.allium).
+        // Seeding zero makes replay non-idempotent: a chargeback covered by existing credit becomes new principal.
+        Loan reprocessLoan = transactionsToBeProcessed.isEmpty() ? null : transactionsToBeProcessed.getFirst().getLoan();
+        MoneyHolder overpaymentHolder = new MoneyHolder(
+                reprocessLoan == null ? Money.zero(currency) : reprocessLoan.getTotalOverpaidAsMoney());
         for (final LoanTransaction loanTransaction : transactionsToBeProcessed) {
             // TODO: analyze and remove this
             if (!loanTransaction.getTypeOf().equals(LoanTransactionType.REFUND_FOR_ACTIVE_LOAN)) {
