@@ -68,6 +68,14 @@ public class AdvancedPaymentAllocationsValidator {
                     "The list of provided payment allocation rules must not contain any duplicates");
         }
 
+        // Require a total, non-null cover of the allocation types (see specs/allocation-cover.allium).
+        // size==12 + distinct is not sufficient: a null (unrecognised rule name) passes as a distinct value.
+        List<PaymentAllocationType> configured = rules.stream().map(Pair::getRight).toList();
+        if (configured.contains(null) || !configured.containsAll(Arrays.asList(PaymentAllocationType.values()))) {
+            raiseValidationError("advanced-payment-strategy.must.cover.all.allocation.types",
+                    "The payment allocation rules must cover all 12 allocation types (none missing, none unrecognised)");
+        }
+
         if (!Arrays.equals(IntStream.rangeClosed(1, 12).boxed().toArray(), rules.stream().map(Pair::getLeft).toArray())) {
             raiseValidationError("advanced-payment-strategy.invalid.order", "The provided orders must be between 1 and 12");
         }
