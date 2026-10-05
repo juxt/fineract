@@ -1,0 +1,13 @@
+# accepted advanced payment-allocation configs (real AdvancedPaymentAllocationsValidator)
+period=0 entries=12 recognised=12 distinct_types=12
+period=1 entries=12 recognised=12 distinct_types=12
+period=2 entries=12 recognised=12 distinct_types=12
+period=3 entries=12 recognised=12 distinct_types=12
+period=4 entries=12 recognised=12 distinct_types=12
+period=5 entries=12 recognised=12 distinct_types=12
+period=6 entries=12 recognised=11 distinct_types=11
+period=7 entries=12 recognised=11 distinct_types=11
+period=8 entries=12 recognised=11 distinct_types=11
+period=9 entries=12 recognised=11 distinct_types=11
+period=10 entries=12 recognised=11 distinct_types=11
+period=11 entries=12 recognised=11 distinct_types=11

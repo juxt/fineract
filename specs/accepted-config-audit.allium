@@ -1,0 +1,17 @@
+-- allium: 4
+-- A runtime audit of the advanced payment-allocation configurations the product validator ACCEPTS. Each
+-- period is one accepted config. A valid config supplies 12 allocation rules, every one recognised (no rule
+-- name parsed to null), covering 12 distinct allocation types. The validator checks the entry count and
+-- distinctness but not that every rule is recognised, so a config carrying a null slips through; monitoring
+-- the accepted stream against this invariant catches it (the find) and confirms it once such configs are
+-- rejected (the fix). The structural contract is in allocation-cover.allium; this is its per-config projection.
+
+component AcceptedConfigAudit
+  entity Config
+  observable state entries(Config)        : Number  -- allocation rules supplied
+  observable state recognised(Config)     : Number  -- rules whose name is a known allocation type (not null)
+  observable state distinct_types(Config) : Number  -- distinct recognised allocation types covered
+
+  invariant complete_cover means every c : Config ::
+    entries(c) = 12 and recognised(c) = 12 and distinct_types(c) = 12
+end

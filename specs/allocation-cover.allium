@@ -1,0 +1,27 @@
+-- allium: 4
+-- A loan product's advanced payment allocation: an ordered strategy over the closed set of 12 allocation
+-- buckets ({past-due, due, in-advance} x {penalty, fee, principal, interest}), each assigned a processing
+-- order 1..12. This is the configuration contract the product validator enforces -- except that its
+-- completeness check (size == 12 plus distinct) only approximates total_cover, so a rule name that parses to
+-- null slips through as a distinct value.
+
+component PaymentAllocationConfig
+  entity AllocationType                                -- the 12 buckets; a closed sort, no null inhabitant
+  observable state configured(AllocationType) : bool   -- present in the product's rule set
+  observable state position(AllocationType)   : Number -- its 1..12 processing order
+  given due_group(AllocationType) : Number             -- 1 past-due, 2 due, 3 in-advance; intrinsic to the bucket
+
+  -- Completeness: every bucket is present. The rule the validator approximates and a null slips through.
+  invariant total_cover means every t : AllocationType :: configured(t)
+
+  -- The processing order is a permutation of 1..12: in range, and distinct across buckets.
+  invariant order_in_range means every t : AllocationType :: position(t) >= 1 and position(t) <= 12
+  invariant order_distinct means every a : AllocationType :: every b : AllocationType ::
+    (not (a = b)) implies (not (position(a) = position(b)))
+
+  -- Horizontal processing cannot interleave due-types: each due-group's buckets form a contiguous block, so
+  -- nothing of another group sits between two buckets of the same group.
+  invariant due_groups_contiguous means every a : AllocationType :: every b : AllocationType :: every c : AllocationType ::
+    (due_group(a) = due_group(b) and position(a) <= position(c) and position(c) <= position(b))
+      implies (due_group(c) = due_group(a))
+end
