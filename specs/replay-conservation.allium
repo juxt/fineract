@@ -1,0 +1,35 @@
+-- allium: 4
+-- The credit-transaction split: processing a chargeback or credit-balance-refund against the loan's overpaid
+-- balance. The processor sets principal_created = max(amount - overpaid_before, 0), draws the remainder from
+-- the overpaid holder, and decreases the holder by what it drew
+-- (AbstractLoanRepaymentScheduleTransactionProcessor:518-521). The contract below is what that split must
+-- honour; the replay path breaks it by seeding overpaid_before to zero.
+
+component CreditTransactionSplit
+  entity Txn
+  observable state amount(Txn)            : Money  -- the credit transaction amount
+  observable state is_chargeback(Txn)     : bool
+  observable state overpaid_before(Txn)   : Money  -- the loan's true overpaid balance before the split
+  observable state overpaid_after(Txn)    : Money  -- and after it
+  observable state principal_created(Txn) : Money  -- amount allocated to new outstanding principal
+  observable state credit_consumed(Txn)   : Money  -- overpaid credit the split drew down
+
+  -- The amount is split in full and nothing goes negative.
+  invariant amount_conserved means every t : Txn :: amount(t) = principal_created(t) + credit_consumed(t)
+  invariant non_negative means every t : Txn ::
+    principal_created(t) >= 0 and credit_consumed(t) >= 0 and overpaid_after(t) >= 0
+
+  -- Credit is drawn down before new principal is created, never more than the loan holds, and the holder
+  -- decreases by exactly what the split drew.
+  invariant credit_drawn_first means every t : Txn :: credit_consumed(t) <= overpaid_before(t)
+  invariant holder_decreases  means every t : Txn :: overpaid_after(t) = overpaid_before(t) - credit_consumed(t)
+
+  -- The split is tight: new principal is the shortfall of the amount over available credit, floored at zero.
+  invariant principal_is_shortfall means every t : Txn ::
+    principal_created(t) = 0 or principal_created(t) = amount(t) - overpaid_before(t)
+
+  -- The rule the replay path breaks: a chargeback fully covered by existing credit creates no new principal,
+  -- so a customer's credit is never silently converted into fresh debt.
+  invariant covered_chargeback_absorbed means every t : Txn ::
+    (is_chargeback(t) and overpaid_before(t) >= amount(t)) implies (principal_created(t) = 0)
+end
